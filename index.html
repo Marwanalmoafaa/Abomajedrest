@@ -109,56 +109,73 @@
     </div>
     <button onclick="addItem()">إضافة</button>
     <div class="data-list" id="dataList"></div>
-  </div>  <div class="section">
-    <h2>قسم العمال</h2>
-    <div id="workersContainer" class="flex"></div>
-    <button onclick="addWorkerRow()">إضافة عامل</button>
-  </div>  <div class="section">
-    <h2>بحث</h2>
-    <input type="text" placeholder="ابحث باسم، سعر أو تاريخ..." oninput="searchData(this.value)">
-    <div class="data-list" id="searchResults"></div>
-  </div>  <div class="section">
-    <h2>عمليات</h2>
-    <button onclick="printData()">طباعة</button>
-    <button onclick="loadData()">تحميل بيانات سابقة</button>
-  </div>  <div class="section">
-    <h2>التقرير الشهري</h2>
-    <label>اختر شهر وسنة:</label>
-    <input type="month" id="monthPicker">
-    <div class="flex">
-      <div>
-        <label>فواتير الكهرباء:</label>
-        <input type="number" id="electricity" value="0">
-      </div>
-      <div>
-        <label>الإيجار:</label>
-        <input type="number" id="rent" value="0">
-      </div>
-      <div>
-        <label>مصروفات أخرى:</label>
-        <input type="text" id="otherExpenses" placeholder="اكتب المصروفات الأخرى">
-      </div>
-    </div>
-    <button onclick="generateMonthlyReport()">عرض التقرير الشهري</button>
-    <button onclick="downloadPDF()">تصدير PDF</button>
-    <canvas id="chart" style="max-width:100%;margin-top:20px;"></canvas>
-    <div id="monthlyReport"></div>
   </div>  <div class="footer">
     جميع الحقوق محفوظة لـ مطعم أبو ماجد 2025
   </div>  <script>
     let data = [];
     let period = 'صباحي';
 
-    function addWorkerRow() {
-      const container = document.getElementById('workersContainer');
-      const div = document.createElement('div');
-      div.innerHTML = `
-        <input type="text" placeholder="اسم العامل" class="worker-name">
-        <input type="number" placeholder="الراتب" class="worker-salary">
-      `;
-      container.appendChild(div);
+    function togglePeriod() {
+      period = (period === 'صباحي') ? 'مسائي' : 'صباحي';
+      document.getElementById('currentPeriod').innerText = period;
     }
 
-    // بقية الكود موجود مسبقًا ويتم الإبقاء عليه كما هو بدون تغيير
+    function addItem() {
+      const category = document.getElementById('category').value;
+      const name = document.getElementById('itemName').value || "-";
+      const priceInput = document.getElementById('itemPrice');
+      const price = parseFloat(priceInput.value);
+      const timestamp = new Date().toISOString();
+
+      if (!priceInput.value || isNaN(price)) {
+        alert("يرجى إدخال السعر بشكل صحيح");
+        return;
+      }
+
+      const item = { category, name, price, period, timestamp };
+      data.push(item);
+      renderData();
+      saveData();
+
+      // Reset fields
+      document.getElementById('itemName').value = '';
+      priceInput.value = '';
+
+      alert("تمت الإضافة بنجاح");
+    }
+
+    function renderData() {
+      const list = document.getElementById('dataList');
+      list.innerHTML = '';
+      data.forEach((item, index) => {
+        list.innerHTML += `<div>#${index + 1} | [${item.category}] ${item.name} - ${item.price} ريال (${item.period})</div>`;
+      });
+    }
+
+    function saveData() {
+      const today = new Date().toISOString().split('T')[0];
+      localStorage.setItem('restaurantData_' + today, JSON.stringify(data));
+    }
+
+    function loadData() {
+      const date = prompt('أدخل التاريخ بصيغة YYYY-MM-DD:');
+      const saved = localStorage.getItem('restaurantData_' + date);
+      if (saved) {
+        data = JSON.parse(saved);
+        renderData();
+        alert('تم تحميل البيانات');
+      } else {
+        alert('لا توجد بيانات لهذا التاريخ');
+      }
+    }
+
+    window.onload = function () {
+      const today = new Date().toISOString().split('T')[0];
+      const saved = localStorage.getItem('restaurantData_' + today);
+      if (saved) {
+        data = JSON.parse(saved);
+        renderData();
+      }
+    }
   </script></body>
 </html>
