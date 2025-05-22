@@ -1,0 +1,328 @@
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f8f9fa;
+    color: #212529;
+    direction: rtl;
+}
+
+header {
+    background-color: #343a40;
+    color: #fff;
+    padding: 1rem 0;
+    /* زيادة الحشو السفلي لإعطاء مساحة لشريط التنقل الذي سيتم وضعه تحته */
+    padding-bottom: 45px; /* جرب هذه القيمة، يمكن زيادتها أو إنقاصها */
+    text-align: center;
+    border-bottom: #007bff 4px solid;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative; /* مهم لتموضع شريط التنقل المطلق */
+}
+
+#appLogo {
+    height: 50px;
+    width: auto;
+    margin-left: 15px;
+    vertical-align: middle;
+}
+
+header h1 {
+    margin: 0;
+    font-size: 1.8rem;
+    font-weight: 500;
+    display: inline-block;
+    vertical-align: middle;
+}
+
+nav {
+    /* تموضع شريط التنقل بشكل مطلق في الجزء السفلي من الهيدر */
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    bottom: 10px; /* المسافة من الحافة السفلية للهيدر - اضبطها لتوسيط الأزرار في المساحة المضافة */
+    width: 100%; /* لجعل الأزرار تتوزع بشكل جيد إذا كانت كثيرة */
+    text-align: center; /* لتوسيط الأزرار داخل شريط التنقل */
+}
+
+nav button {
+    background-color: #495057;
+    color: white;
+    border: none;
+    padding: 10px 15px;
+    margin: 0 5px; /* تقليل الهامش الجانبي قليلاً إذا لزم الأمر */
+    cursor: pointer;
+    border-radius: 5px;
+    font-size: 0.9rem;
+    transition: background-color 0.3s ease;
+}
+
+nav button:hover, nav button.active-nav-button {
+    background-color: #007bff;
+    box-shadow: 0 0 8px rgba(0,123,255,0.5);
+}
+
+main {
+    padding: 25px;
+    /* لا حاجة لـ padding-top كبير هنا لأن الهيدر الآن يشمل مساحة التنقل */
+    /* padding-top: 20px;  يمكن تعديل هذه القيمة أو إزالتها حسب الحاجة بعد تعديل الهيدر */
+    max-width: 960px;
+    margin: 25px auto;
+    background-color: #fff;
+    box-shadow: 0 2px 15px rgba(0,0,0,0.1);
+    border-radius: 10px;
+}
+
+.view {
+    display: none;
+    padding: 20px;
+    border: 1px solid #dee2e6;
+    border-radius: 8px;
+    margin-top: 15px;
+    background-color: #ffffff;
+}
+
+.active-view {
+    display: block;
+}
+
+h2, h3, h4 { /* إضافة h4 للتنسيق */
+    color: #0056b3;
+    border-bottom: 2px solid #007bff;
+    padding-bottom: 8px;
+    margin-top: 10px;
+    margin-bottom: 20px;
+}
+
+h3 {
+    font-size: 1.3rem;
+    color: #17a2b8;
+    border-bottom-color: #17a2b8;
+}
+h4 { /* تنسيق خاص لـ h4 المستخدمة في المصروفات الشهرية */
+    font-size: 1.15rem;
+    color: #28a745; /* لون أخضر */
+    border-bottom: 1px dashed #28a745;
+    margin-top: 20px;
+}
+
+
+label {
+    display: block;
+    margin-top: 12px;
+    margin-bottom: 6px;
+    font-weight: bold;
+    color: #495057;
+}
+
+input[type="text"],
+input[type="number"],
+input[type="date"],
+input[type="month"],
+select {
+    width: calc(100% - 24px);
+    padding: 12px;
+    margin-bottom: 12px;
+    border: 1px solid #ced4da;
+    border-radius: 5px;
+    box-sizing: border-box;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+input[type="text"]:focus,
+input[type="number"]:focus,
+input[type="date"]:focus,
+input[type="month"]:focus,
+select:focus {
+    border-color: #007bff;
+    box-shadow: 0 0 0 0.2rem rgba(0,123,255,.25);
+    outline: none;
+}
+
+
+.entry-item, .worker-salary-item { /* تطبيق نفس النمط لحقول رواتب العمال */
+    display: flex;
+    gap: 12px;
+    margin-bottom: 12px;
+    align-items: center;
+}
+
+.entry-item input[type="text"], .worker-salary-item input[type="text"] {
+    flex-grow: 2;
+}
+.entry-item input[type="number"], .worker-salary-item input[type="number"] {
+    flex-grow: 1;
+}
+.entry-item button, .worker-salary-item button { /* أزرار الإزالة */
+    padding: 8px 12px;
+    font-size: 0.9rem;
+    background-color: #dc3545;
+    min-width: 60px;
+    color: white; /* لون النص لأزرار الإزالة */
+    border: none; /* إزالة الحدود الافتراضية */
+    border-radius: 5px; /* توحيد شكل الأزرار */
+    cursor: pointer; /* تغيير شكل المؤشر */
+}
+
+
+button[type="submit"], button[type="button"] {
+    background-color: #007bff;
+    color: white;
+    padding: 12px 22px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 1.05rem;
+    margin-top: 15px;
+    transition: background-color 0.3s ease, transform 0.1s ease;
+}
+button[type="button"]:not(.nav-button):not(.remove-button) {
+    background-color: #28a745;
+}
+button.remove-button {
+    background-color: #dc3545;
+}
+
+button:hover {
+    opacity: 0.85;
+}
+button:active {
+    transform: scale(0.98);
+}
+
+
+.report-output, #searchResults {
+    margin-top: 25px;
+    padding: 20px;
+    background-color: #e9ecef;
+    border: 1px solid #ced4da;
+    border-radius: 8px;
+    min-height: 120px;
+}
+
+.report-output h4, #searchResults h4 { /* تعديل تنسيق H4 داخل التقارير */
+    margin-top: 18px;
+    margin-bottom: 8px;
+    color: #0056b3;
+    border-bottom: 1px solid #0056b3; /* خط أخف لـ H4 داخل التقارير */
+    font-size: 1.2rem; /* حجم خط H4 داخل التقارير */
+}
+
+
+.report-output ul, #searchResults ul {
+    list-style: none;
+    padding-right: 0;
+}
+.report-output ul li, #searchResults ul li {
+    padding: 8px 0;
+    border-bottom: 1px dashed #ccc;
+}
+.report-output ul li:last-child, #searchResults ul li:last-child {
+    border-bottom: none;
+}
+.report-output ul li strong {
+    color: #343a40;
+}
+.report-output .item-detail {
+    padding-right: 20px;
+    font-style: italic;
+    color: #555;
+}
+
+
+footer {
+    text-align: center;
+    padding: 25px;
+    background-color: #343a40;
+    color: #fff;
+    margin-top: 35px;
+    font-size: 0.9rem;
+}
+
+/* تنسيقات الطباعة المعدلة */
+@media print {
+    body {
+        font-family: 'Times New Roman', Times, serif;
+        background-color: #fff !important;
+        color: #000 !important;
+        margin: 20px;
+        font-size: 12pt;
+    }
+    header, nav, footer, button, input, select, label, #searchInput, #searchView button, #monthlyExpensesForm button[type="button"], #monthlyExpensesForm label, #monthlyExpensesForm input[type="number"], #monthlyExpensesForm #otherMonthlyExpensesContainer, .entry-item button, #dailyEntryForm button[type="button"], #dailyEntryForm label, #appLogo /* إخفاء الشعار من الهيدر المطبوع لأنه سيضاف بشكل منفصل */ {
+        display: none !important;
+    }
+    main {
+        width: 100%;
+        margin: 0;
+        padding: 0;
+        box-shadow: none;
+        border: none;
+    }
+    .view {
+        display: none !important;
+    }
+    .report-output.printable {
+        display: block !important;
+        border: none;
+        background-color: #fff !important;
+        padding: 0;
+        margin: 0;
+    }
+     .report-output.printable .print-header { /* حاوية لشعار المطعم والعنوان في الطباعة */
+        text-align: center;
+        margin-bottom: 20px;
+     }
+     .report-output.printable .print-header img {
+        max-height: 70px; /* حجم الشعار في الطباعة */
+        margin-bottom: 10px;
+     }
+     .report-output.printable .print-header h1 {
+        font-size: 16pt;
+        color: #000;
+        margin: 0;
+     }
+
+     .report-output.printable h2, .report-output.printable h3, .report-output.printable h4 {
+        color: #000 !important;
+        text-align: center;
+        margin-bottom: 15px;
+        font-size: 14pt;
+    }
+    .report-output.printable ul {
+        padding: 0;
+        margin: 0;
+    }
+    .report-output.printable ul li {
+        padding: 5px 0;
+        border-bottom: 1px solid #ccc;
+        font-size: 12pt;
+    }
+    .report-output.printable .item-detail {
+        display: none !important;
+    }
+    #monthlyExpensesForm {
+        display: none !important;
+    }
+    .report-output.printable .monthly-expenses-print-summary {
+        display: block !important;
+    }
+    .report-output.printable .monthly-expenses-print-summary ul li {
+        font-weight: normal;
+    }
+     .report-output.printable .worker-salary-print-item { /* لتفاصيل رواتب العمال في الطباعة */
+        padding-left: 20px; /* مسافة بادئة لاسم العامل وراتبه */
+     }
+    .report-output.printable .total-line strong {
+        font-weight: bold;
+    }
+}
+
+input[type=number]::-webkit-inner-spin-button,
+input[type=number]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+input[type=number] {
+  -moz-appearance: textfield;
+}
