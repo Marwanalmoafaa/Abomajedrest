@@ -1,181 +1,117 @@
-<!DOCTYPE html><html lang="ar">
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>إدارة مطعم أبو ماجد</title>
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-  <style>
-    body {
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      direction: rtl;
-      padding: 20px;
-      background: #f9f9f9;
-      color: #333;
-    }
-    h1, h2 {
-      color: #222;
-      text-align: center;
-    }
-    .section {
-      background: #fff;
-      padding: 15px;
-      margin-bottom: 20px;
-      border-radius: 12px;
-      box-shadow: 0 4px 10px rgba(0,0,0,0.05);
-    }
-    label {
-      display: block;
-      margin: 10px 0 5px;
-    }
-    input, button, select {
-      padding: 10px;
-      margin-bottom: 10px;
-      width: 100%;
-      border: 1px solid #ccc;
-      border-radius: 6px;
-    }
-    button {
-      background: #007bff;
-      color: #fff;
-      border: none;
-      cursor: pointer;
-      transition: background 0.3s;
-    }
-    button:hover {
-      background: #0056b3;
-    }
-    .flex {
-      display: flex;
-      gap: 10px;
-      flex-wrap: wrap;
-    }
-    .flex > div {
-      flex: 1;
-      min-width: 150px;
-    }
-    .data-list {
-      margin-top: 10px;
-    }
-    .data-list div {
-      background: #e9ecef;
-      padding: 8px;
-      margin-bottom: 5px;
-      border-radius: 6px;
-    }
-    .footer {
-      text-align: center;
-      margin-top: 20px;
-      font-size: 0.9em;
-      color: #666;
-    }
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      margin-top: 10px;
-    }
-    table, th, td {
-      border: 1px solid #ccc;
-    }
-    th, td {
-      padding: 8px;
-      text-align: center;
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>مطعم أبو ماجد</title>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <h1>إدارة مطعم أبو ماجد</h1>  <div class="section">
-    <h2>الفترة الحالية</h2>
-    <button onclick="togglePeriod()">تغيير الفترة: <span id="currentPeriod">صباحي</span></button>
-  </div>  <div class="section">
-    <h2>إدخال بيانات</h2>
-    <div class="flex">
-      <div>
-        <label>النوع:</label>
-        <select id="category">
-          <option value="المشتريات">المشتريات</option>
-          <option value="المبيعات كاش">المبيعات - كاش</option>
-          <option value="المبيعات شبكة">المبيعات - شبكة</option>
-          <option value="المصروفات">المصروفات</option>
-        </select>
-      </div>
-      <div>
-        <label>الاسم:</label>
-        <input type="text" id="itemName" placeholder="اختياري">
-      </div>
-      <div>
-        <label>السعر:</label>
-        <input type="number" id="itemPrice">
-      </div>
-    </div>
-    <button onclick="addItem()">إضافة</button>
-    <div class="data-list" id="dataList"></div>
-  </div>  <div class="footer">
-    جميع الحقوق محفوظة لـ مطعم أبو ماجد 2025
-  </div>  <script>
-    let data = [];
-    let period = 'صباحي';
+    <header>
+        <img src="img/logo.png" alt="شعار مطعم أبو ماجد" id="appLogo">
+        <h1>مطعم أبو ماجد</h1>
+        <nav>
+            <button onclick="showView('dailyEntryView')">إدخال يومي</button>
+            <button onclick="showView('dailyReportView')">تقرير يومي</button>
+            <button onclick="showView('monthlyReportView')">تقرير شهري</button>
+            <button onclick="showView('searchView')">بحث</button>
+        </nav>
+    </header>
 
-    function togglePeriod() {
-      period = (period === 'صباحي') ? 'مسائي' : 'صباحي';
-      document.getElementById('currentPeriod').innerText = period;
-    }
+    <main>
+        <section id="dailyEntryView" class="view active-view">
+            <h2>الإدخالات اليومية</h2>
+            <form id="dailyEntryForm">
+                <label for="entryDate">التاريخ:</label>
+                <input type="date" id="entryDate" required>
 
-    function addItem() {
-      const category = document.getElementById('category').value;
-      const name = document.getElementById('itemName').value || "-";
-      const priceInput = document.getElementById('itemPrice');
-      const price = parseFloat(priceInput.value);
-      const timestamp = new Date().toISOString();
+                <label for="entryPeriod">الفترة:</label>
+                <select id="entryPeriod" required>
+                    <option value="morning">صباحي</option>
+                    <option value="evening">مسائي</option>
+                </select>
 
-      if (!priceInput.value || isNaN(price)) {
-        alert("يرجى إدخال السعر بشكل صحيح");
-        return;
-      }
+                <h3>المشتريات</h3>
+                <div id="purchasesContainer">
+                    <div class="entry-item">
+                        <input type="text" class="itemName" placeholder="اسم الصنف">
+                        <input type="number" class="itemPrice" placeholder="السعر" step="0.01">
+                    </div>
+                </div>
+                <button type="button" onclick="addEntryItem('purchases')">إضافة مشتريات أخرى</button>
 
-      const item = { category, name, price, period, timestamp };
-      data.push(item);
-      renderData();
-      saveData();
+                <h3>المبيعات</h3>
+                <div id="salesContainer">
+                    <div class="entry-item">
+                        <input type="text" class="itemName" placeholder="اسم الصنف">
+                        <input type="number" class="itemPrice" placeholder="السعر" step="0.01">
+                    </div>
+                </div>
+                <button type="button" onclick="addEntryItem('sales')">إضافة مبيعات أخرى</button>
 
-      // Reset fields
-      document.getElementById('itemName').value = '';
-      priceInput.value = '';
+                <h3>المصروفات</h3>
+                <div id="expensesContainer">
+                    <div class="entry-item">
+                        <input type="text" class="itemName" placeholder="وصف المصروف">
+                        <input type="number" class="itemPrice" placeholder="المبلغ" step="0.01">
+                    </div>
+                </div>
+                <button type="button" onclick="addEntryItem('expenses')">إضافة مصروفات أخرى</button>
 
-      alert("تمت الإضافة بنجاح");
-    }
+                <button type="submit">حفظ وتحديث الإجماليات</button>
+            </form>
+        </section>
 
-    function renderData() {
-      const list = document.getElementById('dataList');
-      list.innerHTML = '';
-      data.forEach((item, index) => {
-        list.innerHTML += `<div>#${index + 1} | [${item.category}] ${item.name} - ${item.price} ريال (${item.period})</div>`;
-      });
-    }
+        <section id="dailyReportView" class="view">
+            <h2>التقرير اليومي</h2>
+            <label for="reportDate">اختر تاريخ التقرير:</label>
+            <input type="date" id="reportDate">
+            <div id="dailyReportOutput" class="report-output">
+                </div>
+            <button onclick="printCurrentReport('daily')">طباعة التقرير اليومي</button>
+        </section>
 
-    function saveData() {
-      const today = new Date().toISOString().split('T')[0];
-      localStorage.setItem('restaurantData_' + today, JSON.stringify(data));
-    }
+        <section id="monthlyReportView" class="view">
+            <h2>التقرير الشهري</h2>
+            <label for="reportMonth">اختر الشهر والسنة:</label>
+            <input type="month" id="reportMonth">
 
-    function loadData() {
-      const date = prompt('أدخل التاريخ بصيغة YYYY-MM-DD:');
-      const saved = localStorage.getItem('restaurantData_' + date);
-      if (saved) {
-        data = JSON.parse(saved);
-        renderData();
-        alert('تم تحميل البيانات');
-      } else {
-        alert('لا توجد بيانات لهذا التاريخ');
-      }
-    }
+            <h3>مصروفات شهرية إضافية:</h3>
+            <form id="monthlyExpensesForm" onsubmit="event.preventDefault(); saveMonthlyExpenses();">
+                <h4>رواتب العمال</h4>
+                <div id="salariesContainer">
+                    </div>
+                <button type="button" onclick="addWorkerSalaryField()">إضافة عامل</button>
 
-    window.onload = function () {
-      const today = new Date().toISOString().split('T')[0];
-      const saved = localStorage.getItem('restaurantData_' + today);
-      if (saved) {
-        data = JSON.parse(saved);
-        renderData();
-      }
-    }
-  </script></body>
+                <label for="electricity">فاتورة الكهرباء:</label>
+                <input type="number" id="electricity" placeholder="المبلغ" step="0.01">
+
+                <label for="rent">الإيجار الشهري:</label>
+                <input type="number" id="rent" placeholder="المبلغ" step="0.01">
+
+                <div id="otherMonthlyExpensesContainer">
+                    </div>
+                <button type="button" onclick="addOtherMonthlyExpense()">إضافة مصروف شهري آخر</button>
+                <button type="submit">حفظ المصروفات الشهرية</button>
+            </form>
+            <div id="monthlyReportOutput" class="report-output">
+                </div>
+            <button onclick="printCurrentReport('monthly')">طباعة التقرير الشهري</button>
+        </section>
+
+        <section id="searchView" class="view">
+            <h2>البحث</h2>
+            <input type="text" id="searchInput" placeholder="ابحث عن اسم، سعر، أو تاريخ (YYYY-MM-DD)">
+            <button onclick="performSearch()">بحث</button>
+            <div id="searchResults">
+                </div>
+        </section>
+    </main>
+
+    <footer>
+        <p>&copy; جميع الحقوق محفوظة لمطعم أبو ماجد 2025</p>
+    </footer>
+
+    <script src="app.js"></script>
+</body>
 </html>
